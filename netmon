@@ -1,0 +1,56 @@
+# ****************************************
+#  Programa de Monitoreo de Red          #
+#       Ing. Kennedy Sanchez             #
+# (Security + Ps. Auditoria +MGP)        #
+#     @ksanchez_cld on tweeter           #
+# ****************************************     
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import os, time, subprocess, smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
+from email import Encoders
+
+horaRaw = time.time()
+horaFormato = time.ctime(horaRaw)
+
+#def ReadIplist():
+
+os.system('echo > ips_offline.txt')    
+iplist = open('/PATH/entrada_ip.txt')
+list = iplist.readlines()
+for r in list:
+
+#def HostAlive()
+      cmd = subprocess.call(["ping", "-c 3", r])
+      if cmd == 1:
+            offline = open('ips_offline.txt', 'a')
+            offline.write(r)
+            offline.close()
+            print '*'*80      
+            print cmd
+            print "                       El IP:", r,  "\n   !!!Esta mostrando problemas de conexion!!!  ", horaFormato
+            print '*'*80
+      elif cmd == 0:
+            print '-'*80
+            print "                       El IP:", r,  "SE ENCUENTRA ONLINE  ",                 horaFormato
+            print '-'*80
+      
+#def SendMail()
+msg = MIMEMultipart()
+msg['From'] = "ksanchez@micorreo.com.do"
+msg['Subject'] = "Reporte Monitoreo Red"
+macct = "ksanchez@micorreo.com.do"
+msg.attach( MIMEText("Adjunto, grupo de IPs Offline"))
+files=["ips_offline.txt"]
+for f in files:
+     part = MIMEBase('application', "octet-stream")
+     part.set_payload( open(f,"rb").read())
+     Encoders.encode_base64(part)
+     part.add_header('Content-Disposition', 'attachment; filename="offline.txt"')
+     msg.attach(part)
+s = smtplib.SMTP()
+s.connect("SERVIDOR_SMTP", 25)
+s.sendmail("ksanchez@micorreo.com.do", macct, msg.as_string())
+s.quit()
