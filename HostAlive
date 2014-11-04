@@ -1,0 +1,14 @@
+def netscan():
+	for x in range(1,255):
+		ipadd = str(NET) + str(x)
+		print "Escaneando %s" % (ipadd)
+		time.sleep(1)
+		subprocess = Popen(['ping', '-c 1', ipadd], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+		stdout, stderr = subprocess.communicate(input=None)
+		if "bytes from" in stdout:
+			print color.GREEN + "La direccion %s esta respondiendo..."% ipadd + color.ENDC
+		else:
+			print color.RED + "No esta respondiendo " + ipadd + color.ENDC
+			with open('offline.txt', 'a') as file:
+				file.write("%s\n" % ipadd)
+			file.close()
