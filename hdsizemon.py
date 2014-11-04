@@ -59,7 +59,7 @@ def sshXfer():
 
 def sendMail():
 	msg = MIMEMultipart()
-	msg['From'] = "k.sanchez@crcltd.com.do"
+	msg['From'] = "k.sanchez@micorreo.com"
 	#body = msg.attach( MIMEText(r))
 	msg['Subject'] = "Reporte diario monitoreo espacio en disco" 
 	macct = "ksanchez@micorreo.com"
